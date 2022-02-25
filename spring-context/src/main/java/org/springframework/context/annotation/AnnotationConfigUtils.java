@@ -144,6 +144,12 @@ public abstract class AnnotationConfigUtils {
 	 * that this registration was triggered from. May be {@code null}.
 	 * @return a Set of BeanDefinitionHolders, containing all bean definitions
 	 * that have actually been registered by this call
+	 * 
+	 * 注册：
+	 * ConfigurationClassPostProcessor：处理@Configuration注解
+	 * AutowiredAnnotationBeanPostProcessor
+	 * CommonAnnotationBeanPostProcessor
+	 * 
 	 */
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {

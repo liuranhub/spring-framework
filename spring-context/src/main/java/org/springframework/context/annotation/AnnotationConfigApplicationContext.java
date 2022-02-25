@@ -53,6 +53,11 @@ import org.springframework.util.Assert;
  * @see ClassPathBeanDefinitionScanner
  * @see org.springframework.context.support.GenericXmlApplicationContext
  */
+/**
+ * 注解开发的ApplicationContext
+ * 使用方法：
+ * AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(Application.class);
+ */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
 	private final AnnotatedBeanDefinitionReader reader;
@@ -89,7 +94,17 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		this();
+		/*
+		 * 注册componentClasses 到Spring容器
+		 * 执行完register容器主要包含这个三个类
+		 * ConfigurationClassPostProcessor(BeanDefinitionRegistryPostProcessor)：处理@Configuration注解
+		 * AutowiredAnnotationBeanPostProcessor(BeanPostProceesor)：处理@Inject、@Autowired、@Value
+	 	 * CommonAnnotationBeanPostProcessor(BeanPostProceesor)：处理@PreDestroy、@PostConstruct、@Resource
+ 		 * demoApplication：配置类
+		 */
 		register(componentClasses);
+
+		// 容器初始化（核心方法）
 		refresh();
 	}
 
