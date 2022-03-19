@@ -96,6 +96,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		this();
 		/*
 		 * 注册componentClasses 到Spring容器
+		 * 
 		 * 执行完register容器主要包含这个三个类
 		 * ConfigurationClassPostProcessor(BeanDefinitionRegistryPostProcessor)：处理@Configuration注解
 		 * AutowiredAnnotationBeanPostProcessor(BeanPostProceesor)：处理@Inject、@Autowired、@Value

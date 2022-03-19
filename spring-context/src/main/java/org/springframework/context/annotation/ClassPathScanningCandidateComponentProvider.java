@@ -431,7 +431,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 					try {
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
 						/*
-						* 过滤出Spring能够管理文件(AnnotationTypeFilter,通过注解过滤)
+						* 过滤Spring能够管理文件(AnnotationTypeFilter,通过注解过滤)
 						*/ 
 						if (isCandidateComponent(metadataReader)) {
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);

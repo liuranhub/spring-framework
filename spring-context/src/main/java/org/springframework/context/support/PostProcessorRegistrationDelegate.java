@@ -75,11 +75,20 @@ final class PostProcessorRegistrationDelegate {
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
 		Set<String> processedBeans = new HashSet<>();
 
+		// 默认的DefaultListableBeanFactory就是BeanDefinitionRegistry, 因此都会走进这个逻辑
+		// 调用BeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
+			/**
+			 * 调用BeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry
+			 * 1、调用接口传递过来的BeanDefinitionRegistryPostProcessor
+			 * 2、调用实现PriorityOrdered类的BeanDefinitionRegistryPostProcessor
+			 * 3、调用实现Ordered类的BeanDefinitionRegistryPostProcessor
+			 * 4、递归调用新注册进来的BeanDefinitionRegistryPostProcessor,直到所有的Bean都被标记处理过
+			 */
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -156,6 +165,10 @@ final class PostProcessorRegistrationDelegate {
 			invokeBeanFactoryPostProcessors(beanFactoryPostProcessors, beanFactory);
 		}
 
+		/**
+		 * 调用BeanFactoryPostProcessor#postProcessBeanFactory
+		 * 调用顺序和BeanDefinitionRegistryPostProcessor类似,依次按照PriorityOrdered、Ordered、其它 顺序调用
+		 */
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let the bean factory post-processors apply to them!
 		String[] postProcessorNames =

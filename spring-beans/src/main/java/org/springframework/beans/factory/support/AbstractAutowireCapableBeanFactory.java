@@ -503,7 +503,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
 			throws BeanCreationException {
 		/**
-		 * 创建Bean、处理Bean依赖
+		 * 创建Bean、处理Bean依赖、
 		 */
 		if (logger.isTraceEnabled()) {
 			logger.trace("Creating instance of bean '" + beanName + "'");
@@ -532,6 +532,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			// 调用 InstantiationAwareBeanPostProcessor 初始化Bean,如果有实现自定义InstantiationAwareBeanPostProcessor 则直接返回
 			// applyBeanPostProcessorsBeforeInstantiation 和 applyBeanPostProcessorsAfterInitialization 方法都里面调用
+			// 这一步生成的bean也会调用postProcessAfterInitialization 方法完成Bean增强处理
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -1144,6 +1145,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				if (targetType != null) {
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
 					if (bean != null) {
+						// 调用postProcessAfterInitialization方法完成Bean后置处理(实现AOP等增强功能)
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
 					}
 				}
@@ -1809,6 +1811,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
+			// bean 初始化前置操作, 和ApplicationContext相关的Aware接口就在这一步调用
+			// 如：
+			// ApplicationContextAwareProcessor处理EnvironmentAware、ResourceLoaderAware、ApplicationContextAware等
+			// ServletContextAwareProcessor ServletContextAware、ServletConfigAware处理
+			// BeanValidationPostProcessor doValidate
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
@@ -1822,6 +1829,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
+			// bean 初始化后置操作, AbstractAdvisingBeanPostProcessor AOP增强就是在这一步实现
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 

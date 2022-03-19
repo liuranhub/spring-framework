@@ -130,7 +130,7 @@ class ComponentScanAnnotationParser {
 			}
 		});
 		
-		// scan
+		// 扫描包路径下的所有BeanDefinition
 		return scanner.doScan(StringUtils.toStringArray(basePackages));
 	}
 

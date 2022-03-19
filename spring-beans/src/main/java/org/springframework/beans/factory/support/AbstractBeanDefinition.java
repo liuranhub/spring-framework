@@ -260,7 +260,6 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 			setAutowireCandidate(originalAbd.isAutowireCandidate());
 			setPrimary(originalAbd.isPrimary());
 			copyQualifiersFrom(originalAbd);
-			setInstanceSupplier(originalAbd.getInstanceSupplier());
 			setNonPublicAccessAllowed(originalAbd.isNonPublicAccessAllowed());
 			setLenientConstructorResolution(originalAbd.isLenientConstructorResolution());
 			setInitMethodName(originalAbd.getInitMethodName());
